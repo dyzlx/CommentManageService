@@ -1,0 +1,9 @@
+server:
+  port: 8883
+  servlet:
+    context-path: /commentservice
+logging:
+  config: classpath:log4j2.xml
+spring:
+  application:
+    name: commentservice

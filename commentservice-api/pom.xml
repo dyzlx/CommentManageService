@@ -13,4 +13,12 @@
 	<artifactId>commentservice-api</artifactId>
 	<name>commentservice-api</name>
 	<url>http://maven.apache.org</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.dyz.commentservice</groupId>
+			<artifactId>commentservice-sal</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>
