@@ -1,5 +1,7 @@
 package com.dyz.commentservice.sal.bo;
 
+import java.util.Date;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,7 +9,11 @@ import lombok.Data;
 @Builder
 public class CommentInfoBo {
 
+	private Integer commentId;
+	
 	private String content;
+	
+	private Date createTime;
 	
 	private CommentType type;
 	

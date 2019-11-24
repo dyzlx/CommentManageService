@@ -1,5 +1,7 @@
 package com.dyz.commentservice.domain.entity;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +34,9 @@ public class Comment {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(name = "create_time", nullable = false)
+	private Date createTime;
 	
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
