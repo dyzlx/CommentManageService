@@ -16,7 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>{
 	
     Comment queryByPublisherIdAndId(Integer publisherId, Integer id);
 	
-	@Query(value = "select * from record where if(?1 is NULL,1=1,target_resource_id=?1)"
+	@Query(value = "select * from comment where if(?1 is NULL,1=1,target_resource_id=?1)"
 			+ " and if(?2 is NULL,1=1,publisher_id=?2)"
 			+ " and if(?3 is NULL,1=1,type=?3)"
 			+ " and create_time between ?4 and ?5", nativeQuery = true)

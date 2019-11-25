@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import com.dyz.commentservice.domain.entity.Comment;
 import com.dyz.commentservice.sal.bo.CommentInfoBo;
 import com.dyz.commentservice.sal.bo.CommentType;
@@ -27,7 +25,7 @@ public class CommentModelTranslator {
 	}
 
 	public static List<CommentInfoBo> toBoList(List<Comment> entitys) {
-		if (CollectionUtils.isEmpty(entitys)) {
+		if (Objects.isNull(entitys)) {
 			return null;
 		}
 		List<CommentInfoBo> boList = new ArrayList<>();

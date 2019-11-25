@@ -1,5 +1,7 @@
 package com.dyz.commentservice.sal.bo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.dyz.commentservice.common.exception.IllegalParamException;
 
 public enum CommentType {
@@ -14,6 +16,9 @@ public enum CommentType {
 		}
 		if ("comment".equals(type)) {
 			return CommentType.comment;
+		}
+		if (StringUtils.isBlank(type)) {
+			return null;
 		}
 		throw new IllegalParamException(0, "illegal comment type");
 	}

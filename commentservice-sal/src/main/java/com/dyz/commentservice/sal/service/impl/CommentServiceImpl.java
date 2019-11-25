@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dyz.commentservice.common.exception.IllegalParamException;
 import com.dyz.commentservice.common.exception.NoDataException;
@@ -30,23 +32,27 @@ public class CommentServiceImpl implements CommentService {
 	private CommentRepository commentRepository;
 
 	@Override
+	@Transactional(rollbackFor = { Exception.class }, propagation = Propagation.REQUIRED)
 	public List<CommentInfoBo> queryCommentInfo(@NotNull CommentQueryBo queryBo) {
 		log.info("begin to query comments, query object = {}", queryBo);
 		if (Objects.isNull(queryBo)) {
 			log.error("queryBo object is null");
 			throw new IllegalParamException(0, "query param is null");
 		}
+		String type = Objects.isNull(queryBo.getType()) ? null : queryBo.getType().toString();
 		List<Comment> comments = commentRepository.queryCommentInfo(queryBo.getTargetResourceId(),
-				queryBo.getPublisherId(), queryBo.getType().toString(), queryBo.getFromTime(), queryBo.getToTime());
+				queryBo.getPublisherId(), type, queryBo.getFromTime(), queryBo.getToTime());
 		List<CommentInfoBo> results = CommentModelTranslator.toBoList(comments);
 		log.info("end of query comments, result = {}", results);
 		return results;
 	}
 
 	@Override
+	@Transactional(rollbackFor = { Exception.class }, propagation = Propagation.REQUIRED)
 	public Integer createComment(@NotNull CommentCreateBo createBo, @NotNull Integer userId) {
 		log.info("begin to create comment, createBo = {}, userId = {}", createBo, userId);
-		if (!ObjectUtils.allNotNull(createBo, userId)) {
+		if (!ObjectUtils.allNotNull(createBo, createBo.getTargetResourceId(), createBo.getType(), createBo.getContent(),
+				userId)) {
 			log.error("create comment param is null");
 			throw new IllegalParamException(0, "create param is null");
 		}
@@ -59,6 +65,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = { Exception.class }, propagation = Propagation.REQUIRED)
 	public void deleteComment(@NotNull Integer commentId, @NotNull Integer userId) {
 		log.info("begin to delete comment, commentId = {}, userId = {}", commentId, userId);
 		if (!ObjectUtils.allNotNull(commentId, userId)) {
