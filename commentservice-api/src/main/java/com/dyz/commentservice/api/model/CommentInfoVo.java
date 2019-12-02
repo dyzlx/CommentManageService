@@ -15,6 +15,8 @@ public class CommentInfoVo {
 
 	private String type;
 
+	private String isSubComment;
+
 	private Integer targetResourceId;
 
 	private Integer publisherId;

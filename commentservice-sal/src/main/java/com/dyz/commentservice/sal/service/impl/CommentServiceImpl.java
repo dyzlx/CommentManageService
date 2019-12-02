@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
 		}
 		Comment newComment = Comment.builder().content(createBo.getContent()).publisherId(userId)
 				.targetResourceId(createBo.getTargetResourceId()).type(createBo.getType().toString())
-				.createTime(new Date()).build();
+				.createTime(new Date()).isSubComment(createBo.isSubComment()).build();
 		commentRepository.save(newComment);
 		log.info("end of create comment, new comment = {}", newComment);
 		return newComment.getId();

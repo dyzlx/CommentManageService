@@ -14,6 +14,8 @@ public class CommentInfoBo {
 	private String content;
 	
 	private Date createTime;
+
+	private boolean isSubComment;
 	
 	private CommentType type;
 	

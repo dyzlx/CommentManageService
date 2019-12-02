@@ -25,9 +25,10 @@ public class CommentController {
 			@RequestParam(required = false) Integer targetResourceId,
 			@RequestParam(required = false) Integer publisherId,
 			@RequestParam(required = false) String type,
+			@RequestParam(required = false) String isSubComment,
 			@RequestParam(required = false) String fromTime,
 			@RequestParam(required = false) String toTime) {
-		CommentQueryBo queryBo = CommentModelTranslator.toBo(targetResourceId, publisherId, type, fromTime, toTime);
+		CommentQueryBo queryBo = CommentModelTranslator.toBo(targetResourceId, publisherId, type, isSubComment, fromTime, toTime);
 		List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfo(queryBo));
 		return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
 	}

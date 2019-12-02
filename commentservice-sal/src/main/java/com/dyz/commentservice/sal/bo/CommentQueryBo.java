@@ -21,6 +21,8 @@ public class CommentQueryBo {
 	private Integer publisherId;
 	
 	private CommentType type;
+
+	private Boolean isSubComment;
 	
 	private Date fromTime;
 	

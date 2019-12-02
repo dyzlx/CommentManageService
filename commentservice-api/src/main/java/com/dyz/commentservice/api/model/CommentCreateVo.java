@@ -15,5 +15,7 @@ public class CommentCreateVo {
 
 	private String type;
 
+	private String isSubComment;
+
 	private Integer targetResourceId;
 }

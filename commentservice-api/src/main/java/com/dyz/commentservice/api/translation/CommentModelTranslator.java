@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import com.dyz.commentservice.api.model.CommentCreateVo;
@@ -19,18 +20,19 @@ import com.dyz.commentservice.sal.bo.CommentType;
 
 public class CommentModelTranslator {
 
-	public static CommentQueryBo toBo(Integer targetResourceId, Integer publisherId, String type, String fromTime,
+	public static CommentQueryBo toBo(Integer targetResourceId, Integer publisherId, String type, String isSubComment, String fromTime,
 			String toTime) {
 		CommentQueryBo query = null;
 		try {
 			query = CommentQueryBo.builder().targetResourceId(targetResourceId).publisherId(publisherId)
-					.type(CommentType.getType(type))
+					.type(StringUtils.isBlank(type)? null
+							: CommentType.getType(type))
 					.fromTime(Objects.isNull(fromTime) ? null
 							: DateUtils.parseDate(fromTime, ServiceConstant.DATE_FORMAT_SHORT))
 					.toTime(Objects.isNull(toTime) ? null
 							: DateUtils.parseDate(toTime, ServiceConstant.DATE_FORMAT_SHORT))
+					.isSubComment(Boolean.parseBoolean(isSubComment))
 					.build();
-
 		} catch (ParseException e) {
 			throw new IllegalParamException(0, "illegal param");
 		}
@@ -42,7 +44,7 @@ public class CommentModelTranslator {
 			return null;
 		}
 		return CommentCreateBo.builder().content(vo.getContent()).targetResourceId(vo.getTargetResourceId())
-				.type(CommentType.getType(vo.getType())).build();
+				.type(CommentType.getType(vo.getType())).isSubComment(Boolean.parseBoolean(vo.getIsSubComment())).build();
 	}
 
 	public static CommentInfoVo toVo(CommentInfoBo bo) {
@@ -51,7 +53,8 @@ public class CommentModelTranslator {
 		}
 		return CommentInfoVo.builder().commentId(bo.getCommentId()).content(bo.getContent())
 				.createTime(DateHandler.getDateString(bo.getCreateTime())).publisherId(bo.getPublisherId())
-				.targetResourceId(bo.getTargetResourceId()).type(bo.getType().toString()).build();
+				.targetResourceId(bo.getTargetResourceId()).type(bo.getType().toString())
+				.isSubComment(String.valueOf(bo.isSubComment())).build();
 	}
 
 	public static List<CommentInfoVo> toVoList(List<CommentInfoBo> boList) {

@@ -10,6 +10,8 @@ public class CommentCreateBo {
 	private String content;
 	
 	private CommentType type;
+
+	private boolean isSubComment;
 	
 	private Integer targetResourceId;
 }
