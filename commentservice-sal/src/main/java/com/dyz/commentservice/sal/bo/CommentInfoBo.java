@@ -15,7 +15,7 @@ public class CommentInfoBo {
 	
 	private Date createTime;
 
-	private boolean isSubComment;
+	private Integer parentId;
 	
 	private CommentType type;
 	

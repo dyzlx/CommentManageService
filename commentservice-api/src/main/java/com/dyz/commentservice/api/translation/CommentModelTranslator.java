@@ -20,51 +20,52 @@ import com.dyz.commentservice.sal.bo.CommentType;
 
 public class CommentModelTranslator {
 
-	public static CommentQueryBo toBo(Integer targetResourceId, Integer publisherId, String type, String isSubComment, String fromTime,
-			String toTime) {
-		CommentQueryBo query = null;
-		try {
-			query = CommentQueryBo.builder().targetResourceId(targetResourceId).publisherId(publisherId)
-					.type(StringUtils.isBlank(type)? null
-							: CommentType.getType(type))
-					.fromTime(Objects.isNull(fromTime) ? null
-							: DateUtils.parseDate(fromTime, ServiceConstant.DATE_FORMAT_SHORT))
-					.toTime(Objects.isNull(toTime) ? null
-							: DateUtils.parseDate(toTime, ServiceConstant.DATE_FORMAT_SHORT))
-					.isSubComment(Boolean.parseBoolean(isSubComment))
-					.build();
-		} catch (ParseException e) {
-			throw new IllegalParamException(0, "illegal param");
-		}
-		return query;
-	}
+    public static CommentQueryBo toBo(Integer targetResourceId, Integer publisherId, String type, String fromTime,
+                                      String toTime) {
+        CommentQueryBo query = null;
+        try {
+            query = CommentQueryBo.builder()
+                    .targetResourceId(targetResourceId)
+                    .publisherId(publisherId)
+                    .type(StringUtils.isBlank(type) ? null
+                            : CommentType.getType(type))
+                    .fromTime(Objects.isNull(fromTime) ? null
+                            : DateUtils.parseDate(fromTime, ServiceConstant.DATE_FORMAT_SHORT))
+                    .toTime(Objects.isNull(toTime) ? null
+                            : DateUtils.parseDate(toTime, ServiceConstant.DATE_FORMAT_SHORT))
+                    .build();
+        } catch (ParseException e) {
+            throw new IllegalParamException(0, "illegal param");
+        }
+        return query;
+    }
 
-	public static CommentCreateBo toBo(CommentCreateVo vo) {
-		if (Objects.isNull(vo)) {
-			return null;
-		}
-		return CommentCreateBo.builder().content(vo.getContent()).targetResourceId(vo.getTargetResourceId())
-				.type(CommentType.getType(vo.getType())).isSubComment(Boolean.parseBoolean(vo.getIsSubComment())).build();
-	}
+    public static CommentCreateBo toBo(CommentCreateVo vo) {
+        if (Objects.isNull(vo)) {
+            return null;
+        }
+        return CommentCreateBo.builder().content(vo.getContent()).targetResourceId(vo.getTargetResourceId())
+                .type(CommentType.getType(vo.getType())).parentId(vo.getParentId()).build();
+    }
 
-	public static CommentInfoVo toVo(CommentInfoBo bo) {
-		if (Objects.isNull(bo)) {
-			return null;
-		}
-		return CommentInfoVo.builder().commentId(bo.getCommentId()).content(bo.getContent())
-				.createTime(DateHandler.getDateString(bo.getCreateTime())).publisherId(bo.getPublisherId())
-				.targetResourceId(bo.getTargetResourceId()).type(bo.getType().toString())
-				.isSubComment(String.valueOf(bo.isSubComment())).build();
-	}
+    public static CommentInfoVo toVo(CommentInfoBo bo) {
+        if (Objects.isNull(bo)) {
+            return null;
+        }
+        return CommentInfoVo.builder().commentId(bo.getCommentId()).content(bo.getContent())
+                .createTime(DateHandler.getDateString(bo.getCreateTime())).publisherId(bo.getPublisherId())
+                .targetResourceId(bo.getTargetResourceId()).type(bo.getType().toString())
+                .parentId(bo.getParentId()).build();
+    }
 
-	public static List<CommentInfoVo> toVoList(List<CommentInfoBo> boList) {
-		if (Objects.isNull(boList)) {
-			return null;
-		}
-		List<CommentInfoVo> result = new ArrayList<>();
-		boList.stream().forEach(x -> {
-			result.add(toVo(x));
-		});
-		return result;
-	}
+    public static List<CommentInfoVo> toVoList(List<CommentInfoBo> boList) {
+        if (Objects.isNull(boList)) {
+            return null;
+        }
+        List<CommentInfoVo> result = new ArrayList<>();
+        boList.stream().forEach(x -> {
+            result.add(toVo(x));
+        });
+        return result;
+    }
 }

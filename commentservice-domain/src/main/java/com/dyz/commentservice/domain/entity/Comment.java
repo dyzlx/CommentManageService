@@ -47,9 +47,8 @@ public class Comment {
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	@Type(type = "yes_no")
-	@Column(name = "is_sub_comment", nullable = false)
-	private boolean isSubComment;
+	@Column(name = "parent_id", nullable = false)
+	private int parentId;
 	
 	@Column(name = "target_resource_id", nullable = false)
 	private int targetResourceId;

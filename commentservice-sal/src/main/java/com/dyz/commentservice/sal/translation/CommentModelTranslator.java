@@ -21,7 +21,7 @@ public class CommentModelTranslator {
 				.commentId(entity.getId())
 				.createTime(entity.getCreateTime())
 				.type(CommentType.getType(entity.getType()))
-				.isSubComment(entity.isSubComment())
+				.parentId(entity.getParentId())
 				.build();
 	}
 

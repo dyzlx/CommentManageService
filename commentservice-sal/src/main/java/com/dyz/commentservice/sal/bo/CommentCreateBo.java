@@ -11,7 +11,7 @@ public class CommentCreateBo {
 	
 	private CommentType type;
 
-	private boolean isSubComment;
+	private Integer parentId;
 	
 	private Integer targetResourceId;
 }

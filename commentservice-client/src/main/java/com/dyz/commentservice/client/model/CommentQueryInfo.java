@@ -13,8 +13,6 @@ public class CommentQueryInfo {
 
     private String type;
 
-    private String isSubComment;
-
     private String fromTime;
 
     private String toTime;
