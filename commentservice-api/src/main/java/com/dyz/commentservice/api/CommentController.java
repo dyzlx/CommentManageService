@@ -17,36 +17,44 @@ import java.util.List;
 @RequestMapping(value = "comments")
 public class CommentController {
 
-	@Autowired
-	private CommentService commentService;
+    @Autowired
+    private CommentService commentService;
 
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = { "application/json", "application/xml" })
-	public ResponseEntity<Result> queryComment(
-			@RequestParam(required = false) Integer targetResourceId,
-			@RequestParam(required = false) Integer publisherId,
-			@RequestParam(required = false) String type,
-			@RequestParam(required = false) String fromTime,
-			@RequestParam(required = false) String toTime) {
-		CommentQueryBo queryBo = CommentModelTranslator.toBo(targetResourceId, publisherId, type, fromTime, toTime);
-		List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfo(queryBo));
-		return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
-	}
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> queryComment(
+            @RequestParam(required = false) Integer targetResourceId,
+            @RequestParam(required = false) Integer publisherId,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String fromTime,
+            @RequestParam(required = false) String toTime) {
+        CommentQueryBo queryBo = CommentModelTranslator.toBo(targetResourceId, publisherId, type, fromTime, toTime);
+        List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfo(queryBo));
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
+    }
 
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = { "application/json",
-			"application/xml" }, consumes = { "application/json", "application/xml" })
-	public ResponseEntity<Result> createComment(
-			@RequestBody CommentCreateVo createVo, 
-			@RequestHeader Integer userId) {
-		Integer id = commentService.createComment(CommentModelTranslator.toBo(createVo), userId);
-		return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(id).build());
-	}
+    @RequestMapping(value = "collection", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> queryCommentByIds(
+            @RequestBody List<Integer> commentIds,
+            @RequestHeader Integer userId) {
+        List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfoByIds(commentIds, userId));
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
+    }
 
-	@RequestMapping(value = "{commentId}", method = RequestMethod.DELETE, produces = { "application/json",
-			"application/xml" })
-	public ResponseEntity<Result> deleteComment(
-			@PathVariable Integer commentId, 
-			@RequestHeader Integer userId) {
-		commentService.deleteComment(commentId, userId);
-		return ResponseEntity.status(HttpStatus.OK).body(Result.builder().build());
-	}
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = {"application/json",
+            "application/xml"}, consumes = {"application/json", "application/xml"})
+    public ResponseEntity<Result> createComment(
+            @RequestBody CommentCreateVo createVo,
+            @RequestHeader Integer userId) {
+        Integer id = commentService.createComment(CommentModelTranslator.toBo(createVo), userId);
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(id).build());
+    }
+
+    @RequestMapping(value = "{commentId}", method = RequestMethod.DELETE, produces = {"application/json",
+            "application/xml"})
+    public ResponseEntity<Result> deleteComment(
+            @PathVariable Integer commentId,
+            @RequestHeader Integer userId) {
+        commentService.deleteComment(commentId, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().build());
+    }
 }

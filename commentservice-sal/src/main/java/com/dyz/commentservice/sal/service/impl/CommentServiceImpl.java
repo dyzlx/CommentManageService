@@ -1,5 +1,6 @@
 package com.dyz.commentservice.sal.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,6 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
 
     @Override
-    @Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
     public List<CommentInfoBo> queryCommentInfo(@NotNull CommentQueryBo queryBo) {
         log.info("begin to query comments, query object = {}", queryBo);
         if (Objects.isNull(queryBo)) {
@@ -42,6 +42,27 @@ public class CommentServiceImpl implements CommentService {
         String type = Objects.isNull(queryBo.getType()) ? null : queryBo.getType().toString();
         List<Comment> comments = commentRepository.queryCommentInfo(queryBo.getTargetResourceId(),
                 queryBo.getPublisherId(), type, queryBo.getFromTime(), queryBo.getToTime());
+        List<CommentInfoBo> results = CommentModelTranslator.toBoList(comments);
+        log.info("end of query comments, result = {}", results);
+        return results;
+    }
+
+    @Override
+    public List<CommentInfoBo> queryCommentInfoByIds(@NotNull List<Integer> commentIds, @NotNull Integer userId) {
+        log.info("begin to query comments by comment ids, ids = {}, userId = {}", commentIds, userId);
+        if (Objects.isNull(commentIds)) {
+            log.error("comment query ids is null");
+            throw new IllegalParamException(0, "comment query ids is null");
+        }
+        List<Comment> comments = new ArrayList<>();
+        commentIds.forEach(x -> {
+            Comment comment = commentRepository.queryById(x);
+            if (Objects.isNull(comment)) {
+                log.error("no such comment, comment id = {}", x);
+                throw new NoDataException(0, "no such comment id = " + x);
+            }
+            comments.add(comment);
+        });
         List<CommentInfoBo> results = CommentModelTranslator.toBoList(comments);
         log.info("end of query comments, result = {}", results);
         return results;

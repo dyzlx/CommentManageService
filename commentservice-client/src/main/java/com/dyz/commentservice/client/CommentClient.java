@@ -23,6 +23,11 @@ public interface CommentClient {
     @RequestMapping(value = "/commentservice/comments", method = RequestMethod.GET)
     Result<List<CommentInfo>> queryComment(@SpringQueryMap CommentQueryInfo queryInfo);
 
+    @RequestMapping(value = "/commentservice/comments/collection", method = RequestMethod.GET)
+    Result<List<CommentInfo>> queryCommentByIds(
+            @RequestBody List<Integer> commentIds,
+            @RequestHeader(name = "userId") Integer userId);
+
     @RequestMapping(value = "/commentservice/comments", method = RequestMethod.POST, consumes = {"application/json", "application/xml"})
     Result<Integer> createComment(
             @RequestBody CommentCreateInfo createInfo,

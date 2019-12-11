@@ -16,6 +16,13 @@ public interface CommentService {
 	 * @return
 	 */
 	List<CommentInfoBo> queryCommentInfo(@NotNull CommentQueryBo queryBo);
+
+	/**
+	 *
+	 * @param commentIds
+	 * @return
+     */
+	List<CommentInfoBo> queryCommentInfoByIds(@NotNull List<Integer> commentIds, @NotNull Integer userId);
 	
 	/**
 	 * 
