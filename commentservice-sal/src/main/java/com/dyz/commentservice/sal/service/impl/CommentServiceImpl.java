@@ -78,10 +78,12 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalParamException(0, "create param is null");
         }
         int parentCommentId = createBo.getParentId();
-        Comment parent = commentRepository.queryById(parentCommentId);
-        if (Objects.isNull(parent)) {
-            log.error("no such parent comment, parent comment id = {}", parentCommentId);
-            throw new NoDataException(0, "no such parent comment");
+        if (!Objects.equals(parentCommentId, 0)) {
+            Comment parent = commentRepository.queryById(parentCommentId);
+            if (Objects.isNull(parent)) {
+                log.error("no such parent comment, parent comment id = {}", parentCommentId);
+                throw new NoDataException(0, "no such parent comment");
+            }
         }
         Comment newComment = Comment.builder().content(createBo.getContent()).publisherId(userId)
                 .targetResourceId(createBo.getTargetResourceId()).type(createBo.getType().toString())
