@@ -40,6 +40,10 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalParamException(0, "query param is null");
         }
         String type = Objects.isNull(queryBo.getType()) ? null : queryBo.getType().toString();
+        if (!Objects.isNull(queryBo.getTargetResourceId()) && Objects.isNull(type)) {
+            log.error("when specifying targetResourceId, no type is specified");
+            throw new IllegalParamException(0, "when specifying targetResourceId, no type is specified");
+        }
         List<Comment> comments = commentRepository.queryCommentInfo(queryBo.getTargetResourceId(),
                 queryBo.getPublisherId(), type, queryBo.getFromTime(), queryBo.getToTime());
         List<CommentInfoBo> results = CommentModelTranslator.toBoList(comments);
