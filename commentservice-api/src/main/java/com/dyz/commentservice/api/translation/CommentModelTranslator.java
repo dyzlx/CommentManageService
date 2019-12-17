@@ -20,11 +20,12 @@ import com.dyz.commentservice.sal.bo.CommentType;
 
 public class CommentModelTranslator {
 
-    public static CommentQueryBo toBo(Integer targetResourceId, Integer publisherId, String type, String fromTime,
-                                      String toTime) {
+    public static CommentQueryBo toBo(Integer commentId, Integer targetResourceId,
+                                      Integer publisherId, String type, String fromTime, String toTime) {
         CommentQueryBo query = null;
         try {
             query = CommentQueryBo.builder()
+                    .commentId(commentId)
                     .targetResourceId(targetResourceId)
                     .publisherId(publisherId)
                     .type(StringUtils.isBlank(type) ? null

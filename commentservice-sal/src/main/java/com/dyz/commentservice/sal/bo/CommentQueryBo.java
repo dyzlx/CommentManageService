@@ -16,6 +16,8 @@ import lombok.Data;
 @Builder
 public class CommentQueryBo {
 
+    private Integer commentId;
+
 	private Integer targetResourceId;
 	
 	private Integer publisherId;

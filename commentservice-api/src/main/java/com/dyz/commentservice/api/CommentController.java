@@ -22,12 +22,13 @@ public class CommentController {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
     public ResponseEntity<Result> queryComment(
+            @RequestParam(required = false) Integer commentId,
             @RequestParam(required = false) Integer targetResourceId,
             @RequestParam(required = false) Integer publisherId,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String fromTime,
             @RequestParam(required = false) String toTime) {
-        CommentQueryBo queryBo = CommentModelTranslator.toBo(targetResourceId, publisherId, type, fromTime, toTime);
+        CommentQueryBo queryBo = CommentModelTranslator.toBo(commentId, targetResourceId, publisherId, type, fromTime, toTime);
         List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfo(queryBo));
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
     }
