@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.dyz.commentservice.domain.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer>{
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
 	
 	Comment queryById(Integer id);
 	
@@ -22,4 +22,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer>{
 			+ " and if(?4 is NULL,1=1,type=?4)"
 			+ " and create_time between ?5 and ?6", nativeQuery = true)
 	List<Comment> queryCommentInfo(Integer commentId, Integer targetResourceId, Integer publisherId, String type, Date fromTime, Date toTime);
+
+    List<Comment> queryByTargetResourceIdAndType(Integer targetResourceId, String type);
 }
