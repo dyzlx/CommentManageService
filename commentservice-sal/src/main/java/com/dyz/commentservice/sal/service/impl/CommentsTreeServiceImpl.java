@@ -34,7 +34,7 @@ public class CommentsTreeServiceImpl implements CommentsTreeService {
             throw new IllegalParamException(0, "param is null");
         }
         List<CommentInfoBo> allComments = CommentModelTranslator.toBoList(
-                commentRepository.queryByTargetResourceIdAndType(targetResourceId, type));
+                commentRepository.queryByTargetResourceIdAndType(targetResourceId, commentType.toString()));
         List<CommentInfoBo> directSubComments = allComments.stream()
                 .filter(x -> x.getParentId() == 0).collect(Collectors.toList());
         directSubComments.forEach(x->{
@@ -46,12 +46,12 @@ public class CommentsTreeServiceImpl implements CommentsTreeService {
     }
 
     private CommentsTreeNodeBo generateCommentsTreeNode(CommentInfoBo rootComment, List<CommentInfoBo> allComments){
-        CommentsTreeNodeBo node = CommentsTreeNodeBo.builder().comment(rootComment).subComments(new ArrayList<>()).build();
+        CommentsTreeNodeBo node = CommentsTreeNodeBo.init(rootComment, new ArrayList<>());
         List<CommentInfoBo> directSubNode = allComments.stream()
                 .filter(x->Objects.equals(rootComment.getCommentId(), x.getParentId()))
                 .collect(Collectors.toList());
         for(CommentInfoBo subComment : directSubNode){
-            node.getSubComments().add(generateCommentsTreeNode(subComment, allComments));
+            node.getChildComments().add(generateCommentsTreeNode(subComment, allComments));
         }
         return node;
     }
