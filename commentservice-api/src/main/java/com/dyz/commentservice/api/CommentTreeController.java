@@ -1,8 +1,8 @@
 package com.dyz.commentservice.api;
 
+import com.dyz.commentservice.api.model.CommentsTreeNodeVo;
 import com.dyz.commentservice.api.model.Result;
 import com.dyz.commentservice.api.translation.CommentTreeModelTranslator;
-import com.dyz.commentservice.sal.bo.CommentsTreeNodeBo;
 import com.dyz.commentservice.sal.service.CommentsTreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +25,9 @@ public class CommentTreeController {
     public ResponseEntity<Result> queryCommentTree(
             @RequestParam Integer targetResourceId,
             @RequestParam String type) {
-        List<CommentsTreeNodeBo> result = commentsTreeService.getFullCommentsTree(targetResourceId, type);
+        List<CommentsTreeNodeVo> result = CommentTreeModelTranslator.toVoList(
+                commentsTreeService.getFullCommentsTree(targetResourceId, type));
         return ResponseEntity.status(HttpStatus.OK)
-                .body(Result.builder().content(CommentTreeModelTranslator.toVoList(result)).build());
+                .body(Result.builder().content(result).build());
     }
 }
