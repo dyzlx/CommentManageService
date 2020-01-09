@@ -8,6 +8,7 @@ import com.dyz.commentservice.sal.bo.CommentQueryBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.dyz.commentservice.sal.service.CommentService;
 
@@ -44,7 +45,7 @@ public class CommentController {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = {"application/json",
             "application/xml"}, consumes = {"application/json", "application/xml"})
     public ResponseEntity<Result> createComment(
-            @RequestBody CommentCreateVo createVo,
+            @Validated @RequestBody CommentCreateVo createVo,
             @RequestHeader Integer userId) {
         Integer id = commentService.createComment(CommentModelTranslator.toBo(createVo), userId);
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(id).build());
