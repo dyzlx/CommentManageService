@@ -35,28 +35,21 @@ public class CommentController {
     }
 
     @RequestMapping(value = "collection", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
-    public ResponseEntity<Result> queryCommentByIds(
-            @RequestBody List<Integer> commentIds,
-            @RequestHeader Integer userId) {
-        List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfoByIds(commentIds, userId));
+    public ResponseEntity<Result> queryCommentByIds(@RequestBody List<Integer> commentIds) {
+        List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfoByIds(commentIds));
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = {"application/json",
             "application/xml"}, consumes = {"application/json", "application/xml"})
-    public ResponseEntity<Result> createComment(
-            @Validated @RequestBody CommentCreateVo createVo,
-            @RequestHeader Integer userId) {
-        Integer id = commentService.createComment(CommentModelTranslator.toBo(createVo), userId);
+    public ResponseEntity<Result> createComment(@Validated @RequestBody CommentCreateVo createVo) {
+        Integer id = commentService.createComment(CommentModelTranslator.toBo(createVo));
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(id).build());
     }
 
-    @RequestMapping(value = "{commentId}", method = RequestMethod.DELETE, produces = {"application/json",
-            "application/xml"})
-    public ResponseEntity<Result> deleteComment(
-            @PathVariable Integer commentId,
-            @RequestHeader Integer userId) {
-        commentService.deleteComment(commentId, userId);
+    @RequestMapping(value = "{commentId}", method = RequestMethod.DELETE, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> deleteComment(@PathVariable Integer commentId) {
+        commentService.deleteComment(commentId);
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().build());
     }
 }

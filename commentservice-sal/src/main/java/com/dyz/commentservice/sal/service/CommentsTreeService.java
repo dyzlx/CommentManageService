@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface CommentsTreeService {
 
-    List<CommentsTreeNodeBo> getFullCommentsTree(@NotNull Integer targetResourceId, @NotNull String type);
+    List<CommentsTreeNodeBo> getFullCommentsTree(Integer targetResourceId, String type);
 }

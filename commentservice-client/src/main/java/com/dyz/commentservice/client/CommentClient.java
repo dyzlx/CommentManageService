@@ -11,7 +11,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,17 +23,11 @@ public interface CommentClient {
     Result<List<CommentInfo>> queryComment(@SpringQueryMap CommentQueryInfo queryInfo);
 
     @RequestMapping(value = "/commentservice/comments/collection", method = RequestMethod.GET)
-    Result<List<CommentInfo>> queryCommentByIds(
-            @RequestBody List<Integer> commentIds,
-            @RequestHeader(name = "userId") Integer userId);
+    Result<List<CommentInfo>> queryCommentByIds(@RequestBody List<Integer> commentIds);
 
     @RequestMapping(value = "/commentservice/comments", method = RequestMethod.POST, consumes = {"application/json", "application/xml"})
-    Result<Integer> createComment(
-            @RequestBody CommentCreateInfo createInfo,
-            @RequestHeader(name = "userId") Integer userId);
+    Result<Integer> createComment(@RequestBody CommentCreateInfo createInfo);
 
     @RequestMapping(value = "/commentservice/comments/{commentId}", method = RequestMethod.DELETE)
-    void deleteComment(
-            @PathVariable(name = "commentId") Integer commentId,
-            @RequestHeader(name = "userId") Integer userId);
+    void deleteComment(@PathVariable(name = "commentId") Integer commentId);
 }

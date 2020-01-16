@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
+import com.dyz.commentservice.common.model.UserContext;
+import com.dyz.commentservice.common.model.UserContextHolder;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentInfoBo> queryCommentInfo(@NotNull CommentQueryBo queryBo) {
-        log.info("begin to query comments, query object = {}", queryBo);
+        log.info("begin to query comments, query object = {}, user context = {}", queryBo, getUserContext());
         if (Objects.isNull(queryBo)) {
             log.error("queryBo object is null");
             throw new IllegalParamException(0, "query param is null");
@@ -52,8 +54,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentInfoBo> queryCommentInfoByIds(@NotNull List<Integer> commentIds, @NotNull Integer userId) {
-        log.info("begin to query comments by comment ids, ids = {}, userId = {}", commentIds, userId);
+    public List<CommentInfoBo> queryCommentInfoByIds(List<Integer> commentIds) {
+        log.info("begin to query comments by comment ids, ids = {}", commentIds);
         if (Objects.isNull(commentIds)) {
             log.error("comment query ids is null");
             throw new IllegalParamException(0, "comment query ids is null");
@@ -74,10 +76,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
-    public Integer createComment(@NotNull CommentCreateBo createBo, @NotNull Integer userId) {
-        log.info("begin to create comment, createBo = {}, userId = {}", createBo, userId);
+    public Integer createComment(CommentCreateBo createBo) {
+        log.info("begin to create comment, createBo = {}, user context = {}", createBo, getUserContext());
         if (!ObjectUtils.allNotNull(createBo, createBo.getTargetResourceId(), createBo.getType(), createBo.getContent(),
-                createBo.getParentId(), userId)) {
+                createBo.getParentId())) {
             log.error("create comment param is null");
             throw new IllegalParamException(0, "create param is null");
         }
@@ -89,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
                 throw new NoDataException(0, "no such parent comment");
             }
         }
-        Comment newComment = Comment.builder().content(createBo.getContent()).publisherId(userId)
+        Comment newComment = Comment.builder().content(createBo.getContent()).publisherId(getUserId())
                 .targetResourceId(createBo.getTargetResourceId()).type(createBo.getType().toString())
                 .createTime(new Date()).parentId(createBo.getParentId()).build();
         commentRepository.save(newComment);
@@ -99,18 +101,36 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
-    public void deleteComment(@NotNull Integer commentId, @NotNull Integer userId) {
-        log.info("begin to delete comment, commentId = {}, userId = {}", commentId, userId);
-        if (!ObjectUtils.allNotNull(commentId, userId)) {
+    public void deleteComment(Integer commentId) {
+        log.info("begin to delete comment, commentId = {}, user context = {}", commentId, getUserContext());
+        if (!ObjectUtils.allNotNull(commentId)) {
             log.error("delete comment param is null");
             throw new IllegalParamException(0, "delete param is null");
         }
-        Comment deleteComment = commentRepository.queryByPublisherIdAndId(userId, commentId);
+        Comment deleteComment = commentRepository.queryByPublisherIdAndId(getUserId(), commentId);
         if (Objects.isNull(deleteComment)) {
-            log.error("no such comment, userId = {}, commentId = {}", userId, commentId);
+            log.error("no such comment, commentId = {}", commentId);
             throw new NoDataException(0, "no such comment");
         }
         commentRepository.delete(deleteComment);
         log.info("end of delete comment, deleted comment = {}", deleteComment);
+    }
+
+    /**
+     * get user id from user context
+     *
+     * @return user id
+     */
+    public Integer getUserId() {
+        return getUserContext().getUserId();
+    }
+
+    /**
+     * get user context from user context holder
+     *
+     * @return user context
+     */
+    public UserContext getUserContext() {
+        return UserContextHolder.getUserContext();
     }
 }
