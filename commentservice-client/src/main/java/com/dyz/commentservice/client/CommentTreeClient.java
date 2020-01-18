@@ -2,6 +2,7 @@ package com.dyz.commentservice.client;
 
 import com.dyz.commentservice.client.config.ClientErrorConfiguration;
 import com.dyz.commentservice.client.config.ClientLogConfiguration;
+import com.dyz.commentservice.client.config.FeignClientConfiguration;
 import com.dyz.commentservice.client.model.CommentsTreeNodeInfo;
 import com.dyz.commentservice.client.model.Result;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(value = "commentservice", configuration = {ClientErrorConfiguration.class, ClientLogConfiguration.class})
+@FeignClient(value = "commentservice", contextId = "commentTreeClient", configuration = {FeignClientConfiguration.class})
 public interface CommentTreeClient {
 
     @RequestMapping(value = "/commentservice/comment_tree", method = RequestMethod.GET)
