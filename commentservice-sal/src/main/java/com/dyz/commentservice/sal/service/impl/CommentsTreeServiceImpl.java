@@ -1,8 +1,6 @@
 package com.dyz.commentservice.sal.service.impl;
 
 import com.dyz.commentservice.common.exception.IllegalParamException;
-import com.dyz.commentservice.common.model.UserContext;
-import com.dyz.commentservice.common.model.UserContextHolder;
 import com.dyz.commentservice.domain.repository.CommentRepository;
 import com.dyz.commentservice.sal.bo.CommentInfoBo;
 import com.dyz.commentservice.sal.bo.CommentType;
@@ -15,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.dyz.commentservice.common.model.UserContextHolder.getUserContext;
 
 @Slf4j
 @Service
@@ -59,23 +58,5 @@ public class CommentsTreeServiceImpl implements CommentsTreeService {
             node.getChildComments().add(generateCommentsTreeNode(subComment, allComments));
         }
         return node;
-    }
-
-    /**
-     * get user id from user context
-     *
-     * @return user id
-     */
-    public Integer getUserId() {
-        return getUserContext().getUserId();
-    }
-
-    /**
-     * get user context from user context holder
-     *
-     * @return user context
-     */
-    public UserContext getUserContext() {
-        return UserContextHolder.getUserContext();
     }
 }

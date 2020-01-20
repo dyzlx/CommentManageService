@@ -7,8 +7,6 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import com.dyz.commentservice.common.model.UserContext;
-import com.dyz.commentservice.common.model.UserContextHolder;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +24,9 @@ import com.dyz.commentservice.sal.service.CommentService;
 import com.dyz.commentservice.sal.translation.CommentModelTranslator;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static com.dyz.commentservice.common.model.UserContextHolder.getUserContext;
+import static com.dyz.commentservice.common.model.UserContextHolder.getUserId;
 
 @Slf4j
 @Service
@@ -114,23 +115,5 @@ public class CommentServiceImpl implements CommentService {
         }
         commentRepository.delete(deleteComment);
         log.info("end of delete comment, deleted comment = {}", deleteComment);
-    }
-
-    /**
-     * get user id from user context
-     *
-     * @return user id
-     */
-    public Integer getUserId() {
-        return getUserContext().getUserId();
-    }
-
-    /**
-     * get user context from user context holder
-     *
-     * @return user context
-     */
-    public UserContext getUserContext() {
-        return UserContextHolder.getUserContext();
     }
 }
