@@ -22,15 +22,15 @@ import java.util.List;
 @FeignClient(value = "commentservice", contextId = "commentClient", configuration = {FeignClientConfiguration.class})
 public interface CommentClient {
 
-    @RequestMapping(value = "/commentservice/comments", method = RequestMethod.GET)
+    @RequestMapping(value = "/comments", method = RequestMethod.GET)
     Result<List<CommentInfo>> queryComment(@SpringQueryMap CommentQueryInfo queryInfo);
 
-    @RequestMapping(value = "/commentservice/comments/collection", method = RequestMethod.GET)
+    @RequestMapping(value = "/comments/collection", method = RequestMethod.GET)
     Result<List<CommentInfo>> queryCommentByIds(@RequestBody List<Integer> commentIds);
 
-    @RequestMapping(value = "/commentservice/comments", method = RequestMethod.POST, consumes = {"application/json", "application/xml"})
+    @RequestMapping(value = "/comments", method = RequestMethod.POST, consumes = {"application/json", "application/xml"})
     Result<Integer> createComment(@RequestBody CommentCreateInfo createInfo);
 
-    @RequestMapping(value = "/commentservice/comments/{commentId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/comments/{commentId}", method = RequestMethod.DELETE)
     void deleteComment(@PathVariable(name = "commentId") Integer commentId);
 }
