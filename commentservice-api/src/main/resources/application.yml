@@ -3,7 +3,7 @@ server:
   servlet:
     context-path: /
 logging:
-  config: classpath:log4j2.xml
+  file: /Volumes/DYZ-document/Program/X-CodeRunSpace/log/commentservice/comment-service.log
 spring:
   application:
     name: commentservice
