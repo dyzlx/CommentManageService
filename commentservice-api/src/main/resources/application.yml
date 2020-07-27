@@ -15,12 +15,12 @@ management:
       exposure:
         include: '*'
 logging:
-  file: /Volumes/DYZ-document/Program/X-CodeRunSpace/log/commentservice/comment-service.log
+  file: /Volumes/DYZ-document/JavaProgram/X-CodeRunSpace/log/commentservice/comment-service.log
   level:
     com.netflix.discovery: error
 spring:
   profiles:
-    include: discover-eureka
+    include: discover-consul
   application:
     name: commentservice
   datasource:
