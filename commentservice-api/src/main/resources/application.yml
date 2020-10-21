@@ -15,18 +15,24 @@ management:
       exposure:
         include: '*'
 logging:
-  file: /Volumes/DYZ-document/JavaProgram/X-CodeRunSpace/log/commentservice/comment-service.log
   level:
     com.netflix.discovery: error
 spring:
-  profiles:
-    include: discover-consul
   application:
     name: commentservice
   cloud:
     loadbalancer:
       ribbon:
         enabled: true
+    consul:
+      host: ${DMS_DISCOVER_HOST:127.0.0.1}
+      port: 8500
+      discovery:
+        instance-id: ${spring.application.name}-${server.port}
+        prefer-ip-address: true
+        enabled: true
+        register: true
+        deregister: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DMS_DB_HOST:127.0.0.1}:3306/commentdb?charset=utf8mb4&useSSL=false
