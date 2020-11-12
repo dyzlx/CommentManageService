@@ -47,9 +47,19 @@ public class Comment {
 	@Column(name = "type", nullable = false)
 	private String type;
 
+	/**
+	 * 父评论ID，该评论针对另一个评论
+	 * 值为0表示，该评论为某一资源的第一级评论
+	 */
 	@Column(name = "parent_id", nullable = false)
 	private int parentId;
-	
+
+	/**
+	 * 该评论是哪种资源下的评论
+	 * Record的评论
+	 * 或者
+	 * File的评论
+	 */
 	@Column(name = "target_resource_id", nullable = false)
 	private int targetResourceId;
 	
