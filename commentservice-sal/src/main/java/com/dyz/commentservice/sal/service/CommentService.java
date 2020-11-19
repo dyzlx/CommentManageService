@@ -21,6 +21,28 @@ public interface CommentService {
     List<CommentInfoBo> queryCommentInfoByIds(List<Integer> commentIds);
 
     /**
+     *
+     * @param commentId
+     * @return
+     */
+    CommentInfoBo queryCommentInfoById(Integer commentId);
+
+    /**
+     *
+     * @param targetResourceId
+     * @param type
+     * @return
+     */
+    List<CommentInfoBo> queryCommentInfoByTargetResourceIdAndType(Integer targetResourceId, String type);
+
+    /**
+     *
+     * @param publisherId
+     * @return
+     */
+    List<CommentInfoBo> queryCommentInfoByPublisherId(Integer publisherId);
+
+    /**
      * @param createBo
      * @return
      */

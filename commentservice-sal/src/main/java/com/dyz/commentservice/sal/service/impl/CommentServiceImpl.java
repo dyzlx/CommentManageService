@@ -1,18 +1,5 @@
 package com.dyz.commentservice.sal.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dyz.commentservice.common.exception.IllegalParamException;
 import com.dyz.commentservice.common.exception.NoDataException;
 import com.dyz.commentservice.domain.entity.Comment;
@@ -20,10 +7,21 @@ import com.dyz.commentservice.domain.repository.CommentRepository;
 import com.dyz.commentservice.sal.bo.CommentCreateBo;
 import com.dyz.commentservice.sal.bo.CommentInfoBo;
 import com.dyz.commentservice.sal.bo.CommentQueryBo;
+import com.dyz.commentservice.sal.bo.CommentType;
 import com.dyz.commentservice.sal.service.CommentService;
 import com.dyz.commentservice.sal.translation.CommentModelTranslator;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import static com.dyz.commentservice.common.model.UserContextHolder.getUserContext;
 import static com.dyz.commentservice.common.model.UserContextHolder.getUserId;
@@ -73,6 +71,35 @@ public class CommentServiceImpl implements CommentService {
         List<CommentInfoBo> results = CommentModelTranslator.toBoList(comments);
         log.info("end of query comments, result = {}", results);
         return results;
+    }
+
+    @Override
+    public CommentInfoBo queryCommentInfoById(Integer commentId) {
+        log.info("query commentInfo by commentId = {}", commentId);
+        CommentInfoBo result = CommentModelTranslator.toBo(commentRepository.queryById(commentId));
+        log.info("query result = {}", result);
+        return result;
+    }
+
+    @Override
+    public List<CommentInfoBo> queryCommentInfoByTargetResourceIdAndType(Integer targetResourceId, String type) {
+        if(!ObjectUtils.allNotNull(targetResourceId, type)) {
+            log.error("require query param is null");
+            throw new IllegalParamException(0, "require query param is null");
+        }
+        CommentQueryBo queryBo = CommentQueryBo.builder()
+                .targetResourceId(targetResourceId).type(CommentType.getType(type)).build();
+        return queryCommentInfo(queryBo);
+    }
+
+    @Override
+    public List<CommentInfoBo> queryCommentInfoByPublisherId(Integer publisherId) {
+        if(Objects.isNull(publisherId)) {
+            log.error("require query param is null");
+            throw new IllegalParamException(0, "require query param is null");
+        }
+        CommentQueryBo queryBo = CommentQueryBo.builder().publisherId(publisherId).build();
+        return queryCommentInfo(queryBo);
     }
 
     @Override

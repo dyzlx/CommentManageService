@@ -34,6 +34,26 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
     }
 
+    @RequestMapping(value = "{commentId}", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> queryCommentByCommentId(@PathVariable Integer commentId) {
+        CommentInfoVo result = CommentModelTranslator.toVo(commentService.queryCommentInfoById(commentId));
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
+    }
+
+    @RequestMapping(value = "publisher/{publisherId}", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> queryCommentByPublisherId(@PathVariable Integer publisherId) {
+        List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfoByPublisherId(publisherId));
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
+    }
+
+    @RequestMapping(value = "type/{type}/target/{targetResourceId}", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
+    public ResponseEntity<Result> queryCommentByTypeAndTargetResourceId(
+            @PathVariable String type, @PathVariable Integer targetResourceId) {
+        List<CommentInfoVo> result = CommentModelTranslator
+                .toVoList(commentService.queryCommentInfoByTargetResourceIdAndType(targetResourceId, type));
+        return ResponseEntity.status(HttpStatus.OK).body(Result.builder().content(result).build());
+    }
+
     @RequestMapping(value = "collection", method = RequestMethod.GET, produces = {"application/json", "application/xml"})
     public ResponseEntity<Result> queryCommentByIds(@RequestBody List<Integer> commentIds) {
         List<CommentInfoVo> result = CommentModelTranslator.toVoList(commentService.queryCommentInfoByIds(commentIds));

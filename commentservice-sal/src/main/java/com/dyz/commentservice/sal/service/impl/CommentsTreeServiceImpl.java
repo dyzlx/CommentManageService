@@ -30,22 +30,30 @@ public class CommentsTreeServiceImpl implements CommentsTreeService {
     @Override
     public List<CommentsTreeNodeBo> getFullCommentsTree(Integer targetResourceId, String type) {
         log.info("begin to get comments tree, targetResourceId = {}, type = {}, user context = {}", targetResourceId, type, getUserContext());
-        List<CommentsTreeNodeBo> result = new ArrayList<>();
+        List<CommentsTreeNodeBo> result;
         CommentType commentType = CommentType.getType(type);
         if (!ObjectUtils.allNotNull(targetResourceId, commentType)) {
             throw new IllegalParamException(0, "param is null");
         }
         List<CommentInfoBo> allComments = CommentModelTranslator.toBoList(
                 commentRepository.queryByTargetResourceIdAndType(targetResourceId, commentType.toString()));
-        if (!CollectionUtils.isEmpty(allComments)) {
-            List<CommentInfoBo> directSubComments = allComments.stream()
+        result = generateCommentsTreeNodes(allComments);
+        log.info("end of get comments tree");
+        return result;
+    }
+
+    @Override
+    public List<CommentsTreeNodeBo> generateCommentsTreeNodes(List<CommentInfoBo> allCommentsBelongToATargetResource) {
+        List<CommentsTreeNodeBo> result = new ArrayList<>();
+        log.info("generate comments tree node by a comments list which belong to a certain target resource");
+        if (!CollectionUtils.isEmpty(allCommentsBelongToATargetResource)) {
+            List<CommentInfoBo> directSubComments = allCommentsBelongToATargetResource.stream()
                     .filter(x -> x.getParentId() == 0).collect(Collectors.toList());
             directSubComments.forEach(x -> {
-                CommentsTreeNodeBo treeNode = generateCommentsTreeNode(x, allComments);
+                CommentsTreeNodeBo treeNode = generateCommentsTreeNode(x, allCommentsBelongToATargetResource);
                 result.add(treeNode);
             });
         }
-        log.info("end of get comments tree");
         return result;
     }
 
